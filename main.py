@@ -39,8 +39,6 @@ if use_fastboot:
 else:
     product = input("Enter output from `fastboot getvar product` (Ctrl-C to cancel): ")
     token = input("Enter output from `fastboot getvar token` (Ctrl-C to cancel): ")
-    product = "cepheus"
-    token = "VQEBIQEQAWYVxHfYlkaHjNnQJBEF2AMHY2VwaGV1cwIECKnBmw"
 logging.debug("product is %s, token is %s", product, token)
 
 
