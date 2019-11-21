@@ -20,11 +20,11 @@ auth = Auth()
 auth.login_tui("unlockApi")
 logging.debug(auth.__dict__)
 
-r = UnlockRequest(auth, "unlock.update.miui.com", "/api/v3/unlock/userinfo", {
+r = UnlockRequest(auth, "unlock.update.intl.miui.com", "/api/v3/unlock/userinfo", {
   "data":{
     "uid":auth.userid,
     "clientId":"1",
-    "clientVersion":"3.3.827.31",
+    "clientVersion":"3.5.1030.37",
     "language":"en",
     "pcId":hashlib.md5(auth.pcid.encode("utf-8")).hexdigest(),
     "region":"",
@@ -32,9 +32,6 @@ r = UnlockRequest(auth, "unlock.update.miui.com", "/api/v3/unlock/userinfo", {
 r.add_nonce()
 data = r.run()
 logging.debug(data)
-if not data["shouldApply"]:
-    logging.error("Xiaomi server says shouldApply false, status %d", data["applyStatus"])
-    input("Press Ctrl-C to cancel, or enter to continue. ")
 
 if use_fastboot:
     product = fdev.Getvar("product").decode("utf-8")
@@ -42,14 +39,16 @@ if use_fastboot:
 else:
     product = input("Enter output from `fastboot getvar product` (Ctrl-C to cancel): ")
     token = input("Enter output from `fastboot getvar token` (Ctrl-C to cancel): ")
+    product = "cepheus"
+    token = "VQEBIQEQAWYVxHfYlkaHjNnQJBEF2AMHY2VwaGV1cwIECKnBmw"
 logging.debug("product is %s, token is %s", product, token)
 
 
-r = UnlockRequest(auth, "unlock.update.miui.com", "/api/v2/unlock/device/clear", {
+r = UnlockRequest(auth, "unlock.update.intl.miui.com", "/api/v2/unlock/device/clear", {
   "appId":"1",
   "data":{
     "clientId":"1",
-    "clientVersion":"3.3.827.31",
+    "clientVersion":"3.5.1030.37",
     "language":"en",
     "pcId":hashlib.md5(auth.pcid.encode("utf-8")).hexdigest(),
     "product":product,
@@ -61,11 +60,11 @@ logging.debug(data)
 print(f"Xiaomi server says: {data['notice']} It says that the unlock will {'' if data['cleanOrNot'] else 'not '}wipe data.")
 input("Press Ctrl-C to cancel, or enter to continue. ")
 
-r = UnlockRequest(auth, "unlock.update.miui.com", "/api/v3/ahaUnlock", {
+r = UnlockRequest(auth, "unlock.update.intl.miui.com", "/api/v3/ahaUnlock", {
   "appId":"1",
   "data":{
     "clientId":"1",
-    "clientVersion":"3.3.827.31",
+    "clientVersion":"3.5.1030.37",
     "language":"en",
     "operate":"unlock",
     "pcId":hashlib.md5(auth.pcid.encode("utf-8")).hexdigest(),
