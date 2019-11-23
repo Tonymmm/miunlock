@@ -27,8 +27,8 @@ class Auth():
         session = requests.Session()
         session.get("https://account.xiaomi.com/pass/serviceLogin?sid=passport&json=false&passive=true&hidden=false&_snsDefault=facebook&_locale=en")
         session.get("https://account.xiaomi.com/pass/js/info?type=notice&_locale=en")
-        us = input("Insert xiaomi account user (if you have concern on how it's used please read the source code): ")
-        ps = hashlib.md5(input("Insert xiaomi account password (same as above): ").encode("utf-8")).hexdigest().upper()
+        usern = input("Insert xiaomi account user (if you have concern on how it's used please read the source code): ")
+        psw = hashlib.md5(input("Insert xiaomi account password (same as above): ").encode("utf-8")).hexdigest().upper()
         loginData = {
             '_json': 'true',
             'callback':     'https://account.xiaomi.com',
@@ -36,10 +36,10 @@ class Auth():
             'qs':           '%3Fsid%3Dpassport%26json%3Dfalse%26passive%3Dtrue%26hidden%3Dfalse%26_snsDefault%3Dfacebook%26_locale%3Den',
             '_sign':        '2&V1_passport&O3CI2mWi6BiCSNAR7hRK9CatpIw=',
             'serviceParam': "{'checkSafePhone':'false'}",
-            'user':         us,
-            'hash':         ps,
-            'cc':           '+39',
-            'log':          '{"title":"dataCenterZone","message":"Singapore"}{"title":"locale","message":"en"}{"title":"env","message":"release"}{"title":"browser","message":{"name":"miNative/1.0","version":0}}{"title":"search","message":"?sid=passport&json=false&passive=true&hidden=false&_snsDefault=facebook&_locale=en"}{"title":"DefaultRegion","message":{"B":"IT","C":"Italy","N":"+39"}}{"title":"outerlinkDone","message":"done"}{"title":"addInputChange","message":"userName"}'
+            'user':         usern,
+            'hash':         psw,
+            'cc':           '',
+            'log':          ''
         }
         res = session.post("https://account.xiaomi.com/pass/serviceLoginAuth2", loginData)
         
@@ -121,7 +121,7 @@ class UnlockRequest:
         return ret
     def run(self):
         
-        headers = {'clientId': 'MITUNES','User-Agent': 'MITUNES;Windows-6.2/3.5.1030.37','Accept' : '*/*','Content-Type' : 'application/x-www-form-urlencoded'}
+        headers = {'clientId': 'MITUNES','User-Agent': 'MITUNES;Windows-6.2/' + STRINGS["version"],'Accept' : '*/*','Content-Type' : 'application/x-www-form-urlencoded'}
         self.session = requests.session()
         self.session.cookies.set_cookie(self.auth.cookies._cookies[".account.xiaomi.com"]["/"]["passToken"])
         self.session.cookies.set_cookie(self.auth.cookies._cookies[".account.xiaomi.com"]["/"]["deviceId"])

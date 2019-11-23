@@ -17,5 +17,6 @@ STRINGS = {
     20036:"Please wait {data!r} hours.",
     20037:"You have unlocked too many devices with this account.",
     20041:"Please associate a phone number with the account first at https://account.xiaomi.com",
-  }
+  },
+ "version":"3.5.1030.37"
 }

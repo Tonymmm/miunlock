@@ -1,5 +1,6 @@
 import logging, hashlib, io, time
 from request import Auth, UnlockRequest
+from strings import STRINGS
 
 logging.basicConfig(level=logging.WARNING)
 
@@ -24,7 +25,7 @@ r = UnlockRequest(auth, "unlock.update.intl.miui.com", "/api/v3/unlock/userinfo"
   "data":{
     "uid":auth.userid,
     "clientId":"1",
-    "clientVersion":"3.5.1030.37",
+    "clientVersion":STRINGS["version"],
     "language":"en",
     "pcId":hashlib.md5(auth.pcid.encode("utf-8")).hexdigest(),
     "region":"",
@@ -46,7 +47,7 @@ r = UnlockRequest(auth, "unlock.update.intl.miui.com", "/api/v2/unlock/device/cl
   "appId":"1",
   "data":{
     "clientId":"1",
-    "clientVersion":"3.5.1030.37",
+    "clientVersion":STRINGS["version"],
     "language":"en",
     "pcId":hashlib.md5(auth.pcid.encode("utf-8")).hexdigest(),
     "product":product,
@@ -62,7 +63,7 @@ r = UnlockRequest(auth, "unlock.update.intl.miui.com", "/api/v3/ahaUnlock", {
   "appId":"1",
   "data":{
     "clientId":"1",
-    "clientVersion":"3.5.1030.37",
+    "clientVersion":STRINGS["version"],
     "language":"en",
     "operate":"unlock",
     "pcId":hashlib.md5(auth.pcid.encode("utf-8")).hexdigest(),
