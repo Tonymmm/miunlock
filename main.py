@@ -21,7 +21,7 @@ auth = Auth()
 auth.login_tui("unlockApi")
 logging.debug(auth.__dict__)
 
-r = UnlockRequest(auth, "unlock.update.intl.miui.com", "/api/v3/unlock/userinfo", {
+r = UnlockRequest(auth, STRINGS["url"], "/api/v3/unlock/userinfo", {
   "data":{
     "uid":auth.userid,
     "clientId":"1",
@@ -43,7 +43,7 @@ else:
 logging.debug("product is %s, token is %s", product, token)
 
 
-r = UnlockRequest(auth, "unlock.update.intl.miui.com", "/api/v2/unlock/device/clear", {
+r = UnlockRequest(auth, STRINGS["url"], "/api/v2/unlock/device/clear", {
   "appId":"1",
   "data":{
     "clientId":"1",
@@ -59,7 +59,7 @@ logging.debug(data)
 print(f"Xiaomi server says: {data['notice']} It says that the unlock will {'' if data['cleanOrNot'] else 'not '}wipe data.")
 input("Press Ctrl-C to cancel, or enter to continue. ")
 
-r = UnlockRequest(auth, "unlock.update.intl.miui.com", "/api/v3/ahaUnlock", {
+r = UnlockRequest(auth, STRINGS["url"], "/api/v3/ahaUnlock", {
   "appId":"1",
   "data":{
     "clientId":"1",

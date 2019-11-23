@@ -139,7 +139,7 @@ class UnlockRequest:
         nonce = data["nonce"]
         location = data["location"]
         sign = urllib.parse.quote_plus(b64encode(hashlib.sha1(b"nonce="+str(nonce).encode("utf-8")+b"&"+ssecurity.encode("utf-8")).digest()))
-        response = self.session.get(location.replace("https://unlock.update.miui.com/", "https://unlock.update.intl.miui.com/") + "&clientSign=" + sign, headers=headers)
+        response = self.session.get(location.replace("https://unlock.update.miui.com/", STRINGS["url"]) + "&clientSign=" + sign, headers=headers)
 
         self.add_sign()
         self.encrypt()
