@@ -72,6 +72,27 @@ class Auth():
         logging.debug("auth redir text %s", response.text)
         logging.debug("auth data %s", self.__dict__)
         self.pcid = "wb_" + str(uuid.uuid4())
+
+        headers = {'clientId': 'MITUNES','User-Agent': 'MITUNES;Windows-6.2/' + STRINGS["version"],'Accept' : '*/*','Content-Type' : 'application/x-www-form-urlencoded'}
+        self.cookies = requests.cookies.cookiejar_from_dict(requests.utils.dict_from_cookiejar(self.cookies))
+        service_resp = self.session.get("https://account.xiaomi.com/pass/serviceLogin?sid=unlockApi&_json=true&passive=true&hidden=false", headers=headers)
+        data = service_resp.text
+        if data[:len(self.START)] != self.auth.START:
+            raise XiaomiError("invalid data (missing or invalid &&& section)", 1)
+        try:
+            data = json.loads(data[len(self.START):])
+        except json.decoder.JSONDecodeError:
+            raise XiaomiError("invalid json but valid &&& start, probably internal error or changed format", 2)
+        ssecurity = data["ssecurity"]
+        self.ssecurity = ssecurity
+        nonce = data["nonce"]
+        location = data["location"]
+        sign = urllib.parse.quote_plus(b64encode(hashlib.sha1(b"nonce="+str(nonce).encode("utf-8")+b"&"+ssecurity.encode("utf-8")).digest()))
+        cb_resp = session.get(location.replace("https://unlock.update.miui.com", STRINGS["url"]) + "&clientSign=" + sign, headers=headers)
+        cb_resp.raise_for_status()
+        return True
+
+
         return True
 
 class UnlockRequest:
@@ -118,27 +139,6 @@ class UnlockRequest:
         logging.debug("query returned %s", ret)
         return ret
     def run(self):
-        
-        headers = {'clientId': 'MITUNES','User-Agent': 'MITUNES;Windows-6.2/' + STRINGS["version"],'Accept' : '*/*','Content-Type' : 'application/x-www-form-urlencoded'}
-        self.session = requests.session()
-        self.session.cookies.set_cookie(self.auth.cookies._cookies[".account.xiaomi.com"]["/"]["passToken"])
-        self.session.cookies.set_cookie(self.auth.cookies._cookies[".account.xiaomi.com"]["/"]["deviceId"])
-        self.session.cookies.set_cookie(self.auth.cookies._cookies[".account.xiaomi.com"]["/"]["userId"]) 
-        r1 = self.session.get("https://account.xiaomi.com/pass/serviceLogin?sid=unlockApi&_json=true&passive=true&hidden=false", headers=headers)
-        data = r1.text
-        if data[:len(self.auth.START)] != self.auth.START:
-            raise UserError("invalid data (missing or invalid &&& section)", 1)
-        try:
-            data = json.loads(data[len(self.auth.START):])
-        except:
-            raise XiaomiError("invalid json but valid &&& start, probably internal error or changed format", 2)
-        ssecurity = data["ssecurity"]
-        self.auth.ssecurity = ssecurity
-        nonce = data["nonce"]
-        location = data["location"]
-        sign = urllib.parse.quote_plus(b64encode(hashlib.sha1(b"nonce="+str(nonce).encode("utf-8")+b"&"+ssecurity.encode("utf-8")).digest()))
-        response = self.session.get(location.replace("https://unlock.update.miui.com/", STRINGS["url"]) + "&clientSign=" + sign, headers=headers)
-
         self.add_sign()
         self.encrypt()
         self.add_signature()
@@ -151,7 +151,7 @@ class UnlockRequest:
         return data
 
     def send(self):         
-        response = self.session.request(self.method, Url(scheme="https", host=self.host, path=self.path).url, data=self.params, headers={"User-Agent":"XiaomiPCSuite"})
+        response = requests.request(self.method, Url(scheme="https", host=self.host, path=self.path).url, data=self.params, headers={"User-Agent":"XiaomiPCSuite"}, cookies=self.auth.cookies)
         logging.debug(response)
         logging.debug(response.headers)
         response.raise_for_status()
