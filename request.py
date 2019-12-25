@@ -36,7 +36,7 @@ class Auth():
             '_sign':        '2&V1_passport&O3CI2mWi6BiCSNAR7hRK9CatpIw=',
             'serviceParam': "{'checkSafePhone':'false'}",
             'user':         usern,
-            'hash':         psw,
+            'hash':         hashlib.md5(psw),
             'cc':           '',
             'log':          ''
         }
