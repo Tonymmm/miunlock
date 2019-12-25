@@ -76,7 +76,7 @@ class Auth():
 
         headers = {'clientId': 'MITUNES','User-Agent': 'MITUNES;Windows-6.2/' + STRINGS["version"],'Accept' : '*/*','Content-Type' : 'application/x-www-form-urlencoded'}
         self.cookies = requests.cookies.cookiejar_from_dict(requests.utils.dict_from_cookiejar(self.cookies))
-        service_resp = self.session.get("https://account.xiaomi.com/pass/serviceLogin?sid=unlockApi&_json=true&passive=true&hidden=false", headers=headers)
+        service_resp = session.get("https://account.xiaomi.com/pass/serviceLogin?sid=unlockApi&_json=true&passive=true&hidden=false", headers=headers)
         data = service_resp.text
         if data[:len(self.START)] != self.auth.START:
             raise XiaomiError("invalid data (missing or invalid &&& section)", 1)
