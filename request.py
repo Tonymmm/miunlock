@@ -78,7 +78,7 @@ class Auth():
         self.cookies = requests.cookies.cookiejar_from_dict(requests.utils.dict_from_cookiejar(self.cookies))
         service_resp = session.get("https://account.xiaomi.com/pass/serviceLogin?sid=unlockApi&_json=true&passive=true&hidden=false", headers=headers)
         data = service_resp.text
-        if data[:len(self.START)] != self.auth.START:
+        if data[:len(self.START)] != self.START:
             raise XiaomiError("invalid data (missing or invalid &&& section)", 1)
         try:
             data = json.loads(data[len(self.START):])
