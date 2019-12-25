@@ -8,6 +8,7 @@ from urllib3.util.url import Url
 from base64 import b64encode, b64decode
 from Cryptodome.Cipher import AES
 from strings import STRINGS
+import getpass
 
 class XiaomiError(RuntimeError):
     def __init__(self, message, code):
