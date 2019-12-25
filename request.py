@@ -22,13 +22,11 @@ class Auth():
     LOGIN_URL="https://account.xiaomi.com/pass/serviceLogin?sid={}&_json=true&passive=true&hidden=false"
     START="&&&START&&&"
     def login_tui(self, sid):
-        self.login()
-    def login(self):
+        self.login(input("Enter your Xiaomi account username: "), getpass.getpass())
+    def login(self, usern, psw):
         session = requests.Session()
         session.get("https://account.xiaomi.com/pass/serviceLogin?sid=passport&json=false&passive=true&hidden=false&_snsDefault=facebook&_locale=en")
         session.get("https://account.xiaomi.com/pass/js/info?type=notice&_locale=en")
-        usern = input("Insert xiaomi account user (if you have concern on how it's used please read the source code): ")
-        psw = hashlib.md5(input("Insert xiaomi account password (same as above): ").encode("utf-8")).hexdigest().upper()
         loginData = {
             '_json': 'true',
             'callback':     'https://account.xiaomi.com',
@@ -45,7 +43,7 @@ class Auth():
         
         data = res.text
         if data[:len(self.START)] != self.START:
-            raise UserError("invalid data (missing or invalid &&& section)", 1)
+            raise XiaomiError("invalid data (missing or invalid &&& section)", 1)
         try:
             data = json.loads(data[len(self.START):])
         except:
